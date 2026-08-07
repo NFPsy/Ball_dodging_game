@@ -6,11 +6,11 @@ public class Spawner : MonoBehaviour
     public float warningSize = 1.8f;
 
     private const float BaseInterval = 3f;
-    private const float MinInterval = 2f;
-    private const float IntervalStep = 0.5f;
+    private const float MinInterval = 1.5f;
+    private const float IntervalStep = 0.75f;
     private const float PhaseDuration = 30f;
-    private const int MaxBalls = 8;
-    private const float ClearHoldTime = 60f;
+    private const int MaxBalls = 9;
+    private const float ClearHoldTime = 40f;
 
     private static readonly int MaxPhase1Steps = Mathf.RoundToInt((BaseInterval - MinInterval) / IntervalStep);
 
@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.IsGameOver || GameManager.IsGameClear) return;
+        if (GameManager.IsGameOver || GameManager.IsGameClear || GameManager.IsPaused) return;
 
         gameTime += Time.deltaTime;
 

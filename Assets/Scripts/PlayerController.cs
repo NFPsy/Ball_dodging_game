@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.IsGameOver || GameManager.IsGameClear) return;
+        if (GameManager.IsGameOver || GameManager.IsGameClear || GameManager.IsPaused) return;
 
         var keyboard = Keyboard.current;
         if (keyboard == null) return;

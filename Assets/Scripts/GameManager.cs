@@ -2,6 +2,7 @@ public static class GameManager
 {
     public static bool IsGameOver = false;
     public static bool IsGameClear = false;
+    public static bool IsPaused = false;
     public const int GridSize = 5;
     public const float CellSize = 2f;
     public static float BestTime = 0f;

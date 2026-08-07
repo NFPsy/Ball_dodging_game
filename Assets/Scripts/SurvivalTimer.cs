@@ -14,7 +14,11 @@ public class SurvivalTimer : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.IsGameOver && !GameManager.IsGameClear)
+        if (GameManager.IsPaused)
+        {
+            // frozen while paused
+        }
+        else if (!GameManager.IsGameOver && !GameManager.IsGameClear)
         {
             elapsedTime += Time.deltaTime;
         }
