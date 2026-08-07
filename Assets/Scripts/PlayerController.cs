@@ -3,7 +3,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    private int gridX;
+    private int gridZ;
+
+    void Start()
+    {
+        gridX = GameManager.GridSize / 2;
+        gridZ = GameManager.GridSize / 2;
+        ApplyGridPosition();
+    }
 
     void Update()
     {
@@ -12,15 +20,30 @@ public class PlayerController : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        float h = 0f;
-        float v = 0f;
-        if (keyboard.aKey.isPressed) h -= 1f;
-        if (keyboard.dKey.isPressed) h += 1f;
-        if (keyboard.sKey.isPressed) v -= 1f;
-        if (keyboard.wKey.isPressed) v += 1f;
+        int newX = gridX;
+        int newZ = gridZ;
+        if (keyboard.aKey.wasPressedThisFrame) newX -= 1;
+        if (keyboard.dKey.wasPressedThisFrame) newX += 1;
+        if (keyboard.sKey.wasPressedThisFrame) newZ -= 1;
+        if (keyboard.wKey.wasPressedThisFrame) newZ += 1;
 
-        Vector3 move = new Vector3(h, 0f, v) * moveSpeed * Time.deltaTime;
-        transform.Translate(move, Space.World);
+        newX = Mathf.Clamp(newX, 0, GameManager.GridSize - 1);
+        newZ = Mathf.Clamp(newZ, 0, GameManager.GridSize - 1);
+
+        if (newX != gridX || newZ != gridZ)
+        {
+            gridX = newX;
+            gridZ = newZ;
+            ApplyGridPosition();
+        }
+    }
+
+    void ApplyGridPosition()
+    {
+        float half = (GameManager.GridSize - 1) / 2f;
+        float x = (gridX - half) * GameManager.CellSize;
+        float z = (gridZ - half) * GameManager.CellSize;
+        transform.position = new Vector3(x, transform.position.y, z);
     }
 
     void OnCollisionEnter(Collision collision)

@@ -3,10 +3,8 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public float spawnInterval = 3f;
-    public float spawnHeight = 10f;
-    public float rangeX = 5f;
-    public float rangeZ = 5f;
-    public float warningSize = 1.2f;
+    public float spawnHeight = 6f;
+    public float warningSize = 1.8f;
 
     void Start()
     {
@@ -15,8 +13,11 @@ public class Spawner : MonoBehaviour
 
     void SpawnSphere()
     {
-        float x = transform.position.x + Random.Range(-rangeX, rangeX);
-        float z = transform.position.z + Random.Range(-rangeZ, rangeZ);
+        float half = (GameManager.GridSize - 1) / 2f;
+        int gridX = Random.Range(0, GameManager.GridSize);
+        int gridZ = Random.Range(0, GameManager.GridSize);
+        float x = transform.position.x + (gridX - half) * GameManager.CellSize;
+        float z = transform.position.z + (gridZ - half) * GameManager.CellSize;
 
         float fallDistance = spawnHeight - transform.position.y;
         float fallDuration = Mathf.Sqrt(2f * fallDistance / Mathf.Abs(Physics.gravity.y));
