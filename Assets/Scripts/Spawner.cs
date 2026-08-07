@@ -21,5 +21,6 @@ public class Spawner : MonoBehaviour
         sphere.transform.position = new Vector3(x, spawnHeight, z);
         sphere.tag = "Ball";
         sphere.AddComponent<Rigidbody>();
+        sphere.AddComponent<Ball>();
     }
 }
