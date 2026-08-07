@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PauseButton : MonoBehaviour
 {
@@ -9,6 +10,15 @@ public class PauseButton : MonoBehaviour
     {
         label = GetComponentInChildren<Text>();
         GetComponent<Button>().onClick.AddListener(TogglePause);
+    }
+
+    void Update()
+    {
+        var keyboard = Keyboard.current;
+        if (keyboard != null && keyboard.pKey.wasPressedThisFrame)
+        {
+            TogglePause();
+        }
     }
 
     void TogglePause()
