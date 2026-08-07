@@ -10,7 +10,8 @@ public class Spawner : MonoBehaviour
     private const float IntervalStep = 0.75f;
     private const float FinalInterval = 1f;
     private const float PhaseDuration = 20f;
-    private const int MaxBalls = 10;
+    private const int MaxBalls = 11;
+    private const int BallIncrementStep = 2;
     private const float ClearHoldTime = 30f;
 
     private static readonly int MaxPhase1Steps = Mathf.RoundToInt((BaseInterval - MinInterval) / IntervalStep);
@@ -37,13 +38,14 @@ public class Spawner : MonoBehaviour
         {
             spawnInterval = MinInterval;
             float phase2Time = gameTime - PhaseDuration * MaxPhase1Steps;
-            int phase2Steps = Mathf.Min(MaxBalls - 1, Mathf.FloorToInt(phase2Time / PhaseDuration));
-            ballsPerSpawn = 1 + phase2Steps;
+            int phase2Steps = Mathf.FloorToInt(phase2Time / PhaseDuration);
+            ballsPerSpawn = Mathf.Min(MaxBalls, 1 + phase2Steps * BallIncrementStep);
 
             if (ballsPerSpawn >= MaxBalls)
             {
                 spawnInterval = FinalInterval;
-                float phase3Time = phase2Time - PhaseDuration * (MaxBalls - 1);
+                int stepsToMax = Mathf.CeilToInt((MaxBalls - 1) / (float)BallIncrementStep);
+                float phase3Time = phase2Time - PhaseDuration * stepsToMax;
                 if (phase3Time >= ClearHoldTime)
                 {
                     GameManager.IsGameClear = true;
