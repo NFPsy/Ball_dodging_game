@@ -14,7 +14,7 @@ public class SurvivalTimer : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.IsGameOver)
+        if (!GameManager.IsGameOver && !GameManager.IsGameClear)
         {
             elapsedTime += Time.deltaTime;
         }

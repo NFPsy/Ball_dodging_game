@@ -2,20 +2,88 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public float spawnInterval = 3f;
     public float spawnHeight = 6f;
     public float warningSize = 1.8f;
 
-    void Start()
+    private const float BaseInterval = 3f;
+    private const float MinInterval = 2f;
+    private const float IntervalStep = 0.5f;
+    private const float PhaseDuration = 30f;
+    private const int MaxBalls = 8;
+    private const float ClearHoldTime = 60f;
+
+    private static readonly int MaxPhase1Steps = Mathf.RoundToInt((BaseInterval - MinInterval) / IntervalStep);
+
+    private float gameTime = 0f;
+    private float spawnTimer = 0f;
+
+    void Update()
     {
-        InvokeRepeating(nameof(SpawnSphere), spawnInterval, spawnInterval);
+        if (GameManager.IsGameOver || GameManager.IsGameClear) return;
+
+        gameTime += Time.deltaTime;
+
+        int phase1Steps = Mathf.Min(MaxPhase1Steps, Mathf.FloorToInt(gameTime / PhaseDuration));
+        float spawnInterval;
+        int ballsPerSpawn;
+
+        if (phase1Steps < MaxPhase1Steps)
+        {
+            spawnInterval = BaseInterval - IntervalStep * phase1Steps;
+            ballsPerSpawn = 1;
+        }
+        else
+        {
+            spawnInterval = MinInterval;
+            float phase2Time = gameTime - PhaseDuration * MaxPhase1Steps;
+            int phase2Steps = Mathf.Min(MaxBalls - 1, Mathf.FloorToInt(phase2Time / PhaseDuration));
+            ballsPerSpawn = 1 + phase2Steps;
+
+            if (ballsPerSpawn >= MaxBalls)
+            {
+                float phase3Time = phase2Time - PhaseDuration * (MaxBalls - 1);
+                if (phase3Time >= ClearHoldTime)
+                {
+                    GameManager.IsGameClear = true;
+                    return;
+                }
+            }
+        }
+
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer >= spawnInterval)
+        {
+            spawnTimer = 0f;
+            SpawnBalls(ballsPerSpawn);
+        }
     }
 
-    void SpawnSphere()
+    void SpawnBalls(int count)
+    {
+        int totalCells = GameManager.GridSize * GameManager.GridSize;
+        count = Mathf.Min(count, totalCells);
+
+        int[] cells = new int[totalCells];
+        for (int i = 0; i < totalCells; i++) cells[i] = i;
+        for (int i = totalCells - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            int temp = cells[i];
+            cells[i] = cells[j];
+            cells[j] = temp;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            int gridX = cells[i] % GameManager.GridSize;
+            int gridZ = cells[i] / GameManager.GridSize;
+            SpawnSphere(gridX, gridZ);
+        }
+    }
+
+    void SpawnSphere(int gridX, int gridZ)
     {
         float half = (GameManager.GridSize - 1) / 2f;
-        int gridX = Random.Range(0, GameManager.GridSize);
-        int gridZ = Random.Range(0, GameManager.GridSize);
         float x = transform.position.x + (gridX - half) * GameManager.CellSize;
         float z = transform.position.z + (gridZ - half) * GameManager.CellSize;
 
