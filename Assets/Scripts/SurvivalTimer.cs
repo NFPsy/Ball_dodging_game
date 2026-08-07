@@ -18,6 +18,10 @@ public class SurvivalTimer : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
         }
+        else
+        {
+            GameManager.UpdateBestTime(elapsedTime);
+        }
         timerText.text = Mathf.FloorToInt(elapsedTime) + "s";
     }
 }
