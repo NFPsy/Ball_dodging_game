@@ -669,6 +669,7 @@ GameObject:
   - component: {fileID: 1883269710}
   - component: {fileID: 1883269709}
   - component: {fileID: 1883269708}
+  - component: {fileID: 1883269712}
   m_Layer: 0
   m_Name: Cube_Red
   m_TagString: Untagged
@@ -769,6 +770,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1883269712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883269707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d05f13eb62ed347ba6b17d176ab1b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Rotator
+  rotationSpeed: 90
 --- !u!1 &1965562524
 GameObject:
   m_ObjectHideFlags: 0
